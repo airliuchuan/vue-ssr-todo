@@ -1,0 +1,45 @@
+安装: cnpm i pm2 -g
+
+cd到项目根目录下输入命令:
+pm2 start pm2.yml --env production
+
+常用命令
+重启: pm2 restart vue-todo
+停止: pm2 stop vue-todo
+查看应用列表: pm2 list
+查看应用日志: pm2 log vue-todo
+
+配置nginx反向代理到80端口
+安装: yum install nginx
+cd etc/nginx/
+touch todo.conf
+vim todo.conf
+----------------------------
+upstream todo {
+  server 127.0.0.1:8888;
+  keepalive 64
+}
+server {
+  listen 80;
+  server_name todo.jokcy.me;
+  location / {
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_set_header X-Nginx-Proxy true;
+    proxy_set_header Connection
+    proxy_pass http://todo; # 这里要和upstream后的应用慈铭一致可自定义
+  }
+  location ~ \.(txt)$ {
+    root /var/www/jnode/;
+  }
+}
+
+修改完nginx配置文件后, nginx reload
+
+### 七牛云cdn静态资源上传
+1. 创建一个项目空间
+2. 个人中心 -> 密钥管理 -> 删除密钥钱需停用
+3. 安装七牛sdk: cnpm i qiniu -D
+4. 七牛首页SDK&工具 -> 官方sdk -> nodejs
+
