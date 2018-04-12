@@ -4,7 +4,7 @@ const merge = require('webpack-merge')
 const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin')
 const VueServerPlugin = require('vue-server-renderer/server-plugin') // vue-server-renderer
 const baseConfig = require('./webpack.config.base')
-
+const cdnConfig = require('../app.config').cdn
 
 // 为什么不直接配置再base里边?因为ssr渲染另需要一个单独的webpack配置
 const isDev = process.env.NODE_ENV === 'development'
@@ -30,7 +30,8 @@ config = merge(baseConfig, {
   output: {
     libraryTarget: 'commonjs2', // 以commonjs的规范去打包js文件 ssr新加的
     filename: 'server-entry.js', // ssr新加的
-    path: path.join(__dirname, '../server-build') // ssr新加的
+    path: path.join(__dirname, '../server-build'), // ssr新加的
+    publicPath: cdnConfig.host
   },
   externals: Object.keys(require('../package.json').dependencies), // ssr不需要单独打包vue等库文件, 过滤掉 ssr新加的
   module: {
