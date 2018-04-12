@@ -8,8 +8,8 @@ const config = {
   entry: path.join(__dirname, '../client/client-entry.js'),
   output: {
     filename: 'bundle.[hash:8].js',
-    path: path.join(__dirname, '../public'),
-    publicPath: 'http://127.0.0.1:8000/public/' // 这里设置的路径, 需要在devServer中的historyFallback.index属性中加在前边
+    path: path.join(__dirname, '../public')
+    // publicPath: 'http://127.0.0.1:8000/public/' // 这里设置的路径, 需要在devServer中的historyFallback.index属性中加在前边
   },
   module: {
     rules: [
@@ -28,6 +28,10 @@ const config = {
       ]}
     ]
   }
+}
+
+if (isDev) {
+  config.output.publicPath = 'http://127.0.0.1:8000/public/'
 }
 
 module.exports = config
